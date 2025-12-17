@@ -1,0 +1,82 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore #-}
+{-
+Student information:
+  Student 1
+    lastname:
+    student number:
+  Student 2
+    lastname:
+    student number:
+-}
+module Exc6_Processor where
+-- The NOINLINE options are here because of synthesis later on.
+
+import Clash.Prelude
+import Clash.Signal
+import qualified Exc2_2_Stack as Stack
+import qualified Data.List as L
+import Debug.Trace
+
+type Value = Stack.Value
+
+type RegisterFile = Vec 4 Value
+type RegisterAddress = Unsigned 2
+
+data Opcode = Mult | Add
+    deriving (Show, Generic, NFDataX)
+
+data Instr
+  = Push Value
+  | Calc Opcode
+  | PushR RegisterAddress
+  | Save RegisterAddress
+  | Nop
+  deriving (Show, Generic, NFDataX)
+
+type State = (ProcState, RegisterFile)
+
+data ProcState = TODO -- Add your own processor state
+
+
+processor :: State -> (Instr, Value) -> (State, (Stack.Instr, Value))
+processor (state, regs) (instr, value) = undefined -- Add your implementation
+
+
+{-# NOINLINE procBlock #-}
+procBlock :: HiddenClockResetEnable dom
+  => Signal dom (Instr, Value) -> Signal dom (Stack.Instr, Value)
+procBlock = undefined -- Add your implementation
+
+
+{-# NOINLINE system #-}
+system :: HiddenClockResetEnable dom
+  => Signal dom Instr -> Signal dom Value
+system instr = undefined -- Add your implementation
+
+
+{-# NOINLINE system' #-}
+system' :: HiddenClockResetEnable dom
+  => RegisterFile -> Signal dom Instr -> Signal dom Value
+system' regs instr = undefined -- Add your implementation (6.2)
+
+
+
+
+
+testSystem = simulateN @System len system inp
+  where
+    inp = [ Nop, Nop, PushR 0, Push 3, Calc Add, Nop, Nop, Save 1
+          , Nop, PushR 2, Push 2, Calc Mult, Nop, Nop, Save 3, Nop
+          , PushR 3, PushR 1, Calc Add, Nop, Nop, Save 0, Nop, Nop ]
+    len = L.length inp
+
+
+testSystem' = simulateN @System len (system' (1:>3:>5:>7:>Nil)) inp
+  where
+    inp = [ Nop, Nop, PushR 0, Push 3, Calc Mult, Nop, Nop, Save 0, Nop
+          , PushR 0, PushR 1, Calc Add, Nop, Nop, Save 1, Nop
+          , PushR 1, PushR 3, Calc Add, Nop, Nop, Save 3, Nop
+          , PushR 2, PushR 3, Calc Add, Nop, Nop, Save 0, Nop, Nop]
+    len = L.length inp
+
