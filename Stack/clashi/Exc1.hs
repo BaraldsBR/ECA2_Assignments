@@ -35,7 +35,11 @@ exampleSystem x = output
         regout = register 0 output
 
 system :: HiddenClockResetEnable dom => Signal dom (Unsigned 1) -> Signal dom (Unsigned 1)
-system x = undefined -- add your definition
+system x = output
+    where
+        regout = register 0 xorout
+        output = not' <$> xorout
+        xorout = xor' <$> regout <*> x
 
 
 testSystem1 = simulateN @System len system inp

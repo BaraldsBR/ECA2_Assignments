@@ -27,12 +27,19 @@ type State = (Address) -- the stack pointer
 type Output = (Address, Maybe (Address, Value))
 
 stackController :: State -> Instr  -> (State, Output)
-stackController sp instr = undefined -- add your definition
+stackController sp instr = case instr of
+  Push v -> (sp + 1, (sp - 1, Just (sp, v)))
+  _      -> (sp, (sp - 1, Nothing))
 
+{-
+  Using (sp - 1) for the read address feels really unintuitive,
+  but it allows for the block ram to be constantly showing the top of the stack.
+  This was my interpretation of the assignment, but it might not be correct.
+-}
 
 stackBlock :: HiddenClockResetEnable dom
   => Signal dom Instr -> Signal dom Output
-stackBlock = undefined -- add your definition
+stackBlock = mealy stackController 0
 
 
 blockRAMblock :: HiddenClockResetEnable dom
@@ -42,7 +49,11 @@ blockRAMblock = blockRam $ 0:>0:>0:>0:>0:>0:>0:>0:>Nil
 
 system :: HiddenClockResetEnable dom
   => Signal dom Instr -> Signal dom Value
-system instr = undefined -- add your definition
+system instr = output
+  where
+    output = blockRAMblock readAddr writeAddrCont
+    (readAddr, writeAddrCont) = unbundle $ stackBlock instr
+
 
 
 testStackBlock = mapM_ print $ simulateN @System len stackBlock inp

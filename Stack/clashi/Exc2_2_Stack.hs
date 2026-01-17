@@ -28,12 +28,19 @@ type State = (Address) -- the stack pointer
 type Output = (Address, Maybe (Address, Value))
 
 stackController :: State -> Instr  -> (State, Output)
-stackController sp instr = undefined -- extend your definition
+stackController sp instr = case instr of
+  Push v -> (sp + 1, (sp - 1, Just (sp, v)))
+  Pop    -> (sp - 1, (sp - 1, Nothing))
+  _      -> (sp, (sp - 1, Nothing))
 
+{-
+  I am assuming it is not necessary to clear the stack after the pointer is decreased,
+  as the addresses in which the data will remain should never be read.
+-}
 
 {-# NOINLINE stackBlock #-}
 stackBlock :: HiddenClockResetEnable dom => Signal dom Instr -> Signal dom Output
-stackBlock = undefined -- use your definition
+stackBlock = mealy stackController 0
 
 
 {-# NOINLINE blockRAMblock #-}
@@ -45,7 +52,10 @@ blockRAMblock = blockRam $ 0:>0:>0:>0:>0:>0:>0:>0:>Nil
 {-# NOINLINE system #-}
 system :: HiddenClockResetEnable dom
   => Signal dom Instr -> Signal dom Value
-system instr = undefined -- use your definition
+system instr = output
+  where
+    output = blockRAMblock readAddr writeAddrCont
+    (readAddr, writeAddrCont) = unbundle $ stackBlock instr
 
 
 testStackBlock = mapM_ print $ simulateN @System len stackBlock inp
