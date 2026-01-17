@@ -24,17 +24,22 @@ data Instr = Push Value
 
 
 processor :: () -> (Instr, Value) -> ((), Stack.Instr)
-processor state (instr, value) = undefined -- add your definition
+processor state (instr, value) = case instr of
+  Push v -> ((), Stack.Push v)
+  _      -> ((), Stack.Nop)
 
 
 procBlock :: HiddenClockResetEnable dom
   => Signal dom (Instr, Value) -> Signal dom (Stack.Instr)
-procBlock = undefined -- add your definition
+procBlock = mealy processor ()
 
 
 system :: HiddenClockResetEnable dom
   => Signal dom Instr -> Signal dom Value
-system instr = undefined -- add your definition
+system instr = value
+  where
+    value = Stack.system stackInstruction
+    stackInstruction = procBlock $ bundle (instr, value)
 
 
 testSystem = mapM_ print $ simulateN @System len system inp

@@ -29,19 +29,39 @@ data State = Calcing (Maybe Value) Opcode | Idle
   deriving (Show, Generic, NFDataX)
 
 processor :: State -> (Instr, Value) -> (State, (Stack.Instr, Maybe Value))
-processor state (instr, value) = undefined -- extend your definition
-
+processor state (instr, value) = case state of
+  Idle -> case instr of
+    Push v  -> (Idle, (Stack.Push v, Nothing))
+    Calc opCode -> (Calcing Nothing opCode, (Stack.Pop, Nothing))
+    _       -> (Idle, (Stack.Nop, Nothing))
+  Calcing storedValue opCode -> output 
+    where
+      operation = case opCode of
+        Add  -> (+)
+        Mult -> (*)
+      output = case storedValue of
+        Just previous -> (Idle, (Stack.Push opResult, (Just opResult))) where opResult = operation value previous
+        Nothing       -> (Calcing (Just value) opCode, (Stack.Pop, Nothing))
+    
+{-
+  I assume the processor should only take a new instruction if it is Idle,
+  that is why the state check comes before the instruction check.
+  Update: confirmed solution on Exercise 4
+-}
 
 
 procBlock :: HiddenClockResetEnable dom
   => Signal dom (Instr, Value) -> Signal dom (Stack.Instr, Maybe Value)
-procBlock = undefined -- extend your definition
+procBlock = mealy processor Idle
 
 
 
 system :: HiddenClockResetEnable dom
   => Signal dom Instr -> Signal dom (Maybe Value)
-system instr = undefined -- extend your definition
+system instr = opResult
+  where
+    readResult = Stack.system stackInstruction
+    (stackInstruction, opResult) = unbundle $ procBlock $ bundle (instr, readResult) -- this looks bad but I think it is correct (?)
 
 
 testSystem = simulateN @System len system inp
