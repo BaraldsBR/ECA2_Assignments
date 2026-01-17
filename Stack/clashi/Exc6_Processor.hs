@@ -36,29 +36,54 @@ data Instr
 
 type State = (ProcState, RegisterFile)
 
-data ProcState = TODO -- Add your own processor state
-
+data ProcState 
+  = Calcing (Maybe Value) Opcode
+  | Saving RegisterAddress
+  | Idle
+  deriving (Show, Generic, NFDataX)
 
 processor :: State -> (Instr, Value) -> (State, (Stack.Instr, Value))
-processor (state, regs) (instr, value) = undefined -- Add your implementation
+processor (state, regs) (instr, value) = case state of
+  Idle -> case instr of
+    Push v      -> ((Idle, regs), (Stack.Push v, regs !! 0))
+    PushR addr  -> ((Idle, regs), (Stack.Push $ regs !! addr, regs !! 0))
+    Save addr   -> ((Saving addr, regs), (Stack.Pop, regs !! 0))
+    Calc opCode -> ((Calcing Nothing opCode, regs), (Stack.Pop, regs !! 0))
+    _           -> ((Idle, regs), (Stack.Nop, regs !! 0))
+  Calcing storedValue opCode -> output 
+    where
+      operation = case opCode of
+        Add  -> (+)
+        Mult -> (*)
+      output = case storedValue of
+        Just previous -> ((Idle, regs), (Stack.Push opResult, regs !! 0)) where opResult = operation value previous
+        Nothing       -> ((Calcing (Just value) opCode, regs), (Stack.Pop, regs !! 0))
+  Saving addr -> ((Idle, newRegs), (Stack.Nop, regs !! 0)) where newRegs = replace addr value regs
 
 
 {-# NOINLINE procBlock #-}
 procBlock :: HiddenClockResetEnable dom
   => Signal dom (Instr, Value) -> Signal dom (Stack.Instr, Value)
-procBlock = undefined -- Add your implementation
+procBlock = mealy processor (Idle, replicate d4 5)
 
 
 {-# NOINLINE system #-}
 system :: HiddenClockResetEnable dom
   => Signal dom Instr -> Signal dom Value
-system instr = undefined -- Add your implementation
+system instr = output
+  where
+    readResult = Stack.system stackInstruction
+    (stackInstruction, output) = unbundle $ procBlock $ bundle (instr, readResult) -- repeat from 3.2, still looks bad
 
 
 {-# NOINLINE system' #-}
 system' :: HiddenClockResetEnable dom
   => RegisterFile -> Signal dom Instr -> Signal dom Value
-system' regs instr = undefined -- Add your implementation (6.2)
+system' regs instr = output
+  where
+    procBlock' = mealy processor (Idle, regs)
+    readResult = Stack.system stackInstruction
+    (stackInstruction, output) = unbundle $ procBlock' $ bundle (instr, readResult) 
 
 
 

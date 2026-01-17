@@ -19,6 +19,9 @@ import qualified Exc4_Fetch as Fetch
 
 
 system :: HiddenClockResetEnable dom => Signal dom (Maybe Proc.Value)
-system = undefined -- add your definition
+system = output
+  where
+    output = Proc.system procInstr
+    procInstr = Fetch.system
 
 testSystem = mapM_ print $ sampleN @System 32 system

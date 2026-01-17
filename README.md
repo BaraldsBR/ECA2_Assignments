@@ -2,16 +2,16 @@
 ## Assignment 1: StackProcessor
 ### Deadline: 2026/01/18
 10 points
-- [ ] Exercise 1 (0.5 point)
-- [ ] Exercise 2.1 (1 point)
-- [ ] Exercise 2.2 (0.5 point)
-- [ ] Exercise 3.1 (1 point)
-- [ ] Exercise 3.2 (1 point)
-- [ ] Exercise 4 (1 point)
-- [ ] Exercise 5 (0.5 point)
-- [ ] Exercise 6.1 (1 point)
-- [ ] Exercise 6.2 (1 point)
-- [ ] Exercise 7 (0.5 point)
+- [x] Exercise 1 (0.5 point)
+- [x] Exercise 2.1 (1 point)
+- [x] Exercise 2.2 (0.5 point)
+- [x] Exercise 3.1 (1 point)
+- [x] Exercise 3.2 (1 point)
+- [x] Exercise 4 (1 point)
+- [x] Exercise 5 (0.5 point)
+- [x] Exercise 6.1 (1 point)
+- [x] Exercise 6.2 (1 point)
+- [x] Exercise 7 (0.5 point)
 - [ ] Exercise 8.1 (1 point)
 - [ ] Exercise 8.2 (1 point)
 
