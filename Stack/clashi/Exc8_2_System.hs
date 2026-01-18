@@ -31,22 +31,25 @@ system' regs = outputSignals
   where
     instrStream = Fetch.system
 
-    proc0 = Proc.system' (regs !! 0) instrStream
-    proc1 = Proc.system' (regs !! 1) instrStream  
-    proc2 = Proc.system' (regs !! 2) instrStream
-    proc3 = Proc.system' (regs !! 3) instrStream
+    regsMod :: Unsigned 2 -> Proc.RegisterFile
+    regsMod i = 
+      let base = 5.0
+          offset = fromIntegral i * 0.5
+      in (base + offset  * 0.1) :> (base + offset * 0.2) :> (base + offset * 0.3) :> (base + offset * 0.4) :> Nil
 
-    outputSignals = bundle (proc0 :> proc1 :> proc2 :> proc3 :> Nil)
+    regsAlt :: Unsigned 2 -> Proc.RegisterFile -> Proc.RegisterFile
+    regsAlt i regs = zipWith (+) regs (regsMod i)
 
+    regsNew = zipWith regsAlt (iterateI (+1) 0) regs
+    
+    outputSignals = bundle (map (\regsNew -> Proc.system' regsNew instrStream) regsNew)
+  
 testSystem = mapM_ print $ sampleN @System 40 system
 
 testSystem' regs = mapM_ print $ sampleN @System 100 (system' regs)
 
-
-
 topEntity :: Clock System -> Reset System -> Signal System (Proc.Value)
 topEntity clk rst = exposeClockResetEnable system clk rst enableGen
-
 
 -- helper functions
 wf regs = writeFile "output.csv" (unlines $ L.map possToString inbounds)
@@ -56,9 +59,7 @@ wf regs = writeFile "output.csv" (unlines $ L.map possToString inbounds)
         areInBounds poss = and $ map (\p -> p < 127 && p > -127) poss
         positions = everyNth 30 $ run regs
 
-
 run regs = sample @System (system' regs)
-
 
 everyNth n (e:list) = e : (everyNth n rest)
     where
