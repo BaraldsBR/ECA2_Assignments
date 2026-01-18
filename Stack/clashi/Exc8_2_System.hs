@@ -25,23 +25,22 @@ system = output
     output = Proc.system procInstr
     procInstr = Fetch.system
 
+-- Function to modify regs with base and offset scale
+regsMod :: Unsigned 2 -> Proc.RegisterFile
+regsMod i = 
+  let base = 5.0
+      offset = fromIntegral i * 0.5
+  in 0.0 :> (base + offset * 0.2) :> (base + offset * 0.3) :> 0.0 :> Nil
+
+-- Combines usr regs with modified 
+regsAlt :: Unsigned 2 -> Proc.RegisterFile -> Proc.RegisterFile
+regsAlt i regs = zipWith (+) regs (regsMod i)
 
 system' :: HiddenClockResetEnable dom => Vec 4 (Proc.RegisterFile) -> Signal dom (Vec 4 (Proc.Value))
 system' regs = outputSignals
   where
     instrStream = Fetch.system
-
-    regsMod :: Unsigned 2 -> Proc.RegisterFile
-    regsMod i = 
-      let base = 5.0
-          offset = fromIntegral i * 0.5
-      in (base + offset  * 0.1) :> (base + offset * 0.2) :> (base + offset * 0.3) :> (base + offset * 0.4) :> Nil
-
-    regsAlt :: Unsigned 2 -> Proc.RegisterFile -> Proc.RegisterFile
-    regsAlt i regs = zipWith (+) regs (regsMod i)
-
-    regsNew = zipWith regsAlt (iterateI (+1) 0) regs
-    
+    regsNew = zipWith regsAlt (0 :> 1 :> 2 :> 3 :> Nil) regs
     outputSignals = bundle (map (\regsNew -> Proc.system' regsNew instrStream) regsNew)
   
 testSystem = mapM_ print $ sampleN @System 40 system
