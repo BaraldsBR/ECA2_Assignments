@@ -3,11 +3,11 @@
 {-
 Student information:
   Student 1
-    lastname:
-    student number:
+    lastname: Souza
+    student number: s3751163
   Student 2
-    lastname:
-    student number:
+    lastname: Daskalov
+    student number: s2150883
 -}
 module Exc2_1_Stack where
 

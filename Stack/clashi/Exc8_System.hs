@@ -3,11 +3,11 @@
 {-
 Student information:
   Student 1
-    lastname:
-    student number:
+    lastname: Souza
+    student number: s3751163
   Student 2
-    lastname:
-    student number:
+    lastname: Daskalov
+    student number: s2150883
 -}
 module Exc8_System where
 
@@ -20,14 +20,23 @@ import qualified Data.List as L
 
 
 system :: HiddenClockResetEnable dom => Signal dom (Proc.Value)
-system = undefined -- paste your definition of the composed system of excercise 5
+system = output
+  where
+    output = Proc.system procInstr
+    procInstr = Fetch.system
 
 
 system' :: HiddenClockResetEnable dom => Vec 4 (Proc.RegisterFile) -> Signal dom (Vec 4 (Proc.Value))
-system' regs = undefined -- add your definition here
+system' regs = outputSignals
+  where
+    instrStream = Fetch.system
 
+    proc0 = Proc.system' (regs !! 0) instrStream
+    proc1 = Proc.system' (regs !! 1) instrStream  
+    proc2 = Proc.system' (regs !! 2) instrStream
+    proc3 = Proc.system' (regs !! 3) instrStream
 
-
+    outputSignals = bundle (proc0 :> proc1 :> proc2 :> proc3 :> Nil)
 
 testSystem = mapM_ print $ sampleN @System 40 system
 
