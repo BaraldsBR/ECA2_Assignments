@@ -22,11 +22,11 @@ mfir2_100 = mealy step (repeat 0)
         newState = input :> init state
         output = fir100 newState
 
-sim_mfir2_100 :: [SFixed 5 13] -> [SFixed 5 13]
-sim_mfir2_100 inputList = simulateN @System 20 mfir2_100 inputList
+simMfir2_100 :: [SFixed 5 13] -> [SFixed 5 13]
+simMfir2_100 inputList = simulateN @System 20 mfir2_100 inputList
 
 simulate100 :: [SFixed 5 13]
-simulate100 = sim_mfir2_100 inputSignal
+simulate100 = simMfir2_100 inputSignal
 
 -- Assignment 4
 {-# ANN synth_mfir2_100
