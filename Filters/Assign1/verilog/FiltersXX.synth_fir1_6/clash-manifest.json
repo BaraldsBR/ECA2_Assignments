@@ -39,14 +39,14 @@
         },
         {
             "name": "fir1_6.v",
-            "sha256": "23f09f4552680c7b6886bc7b5a267f72d0028b4395bfaa2385c36421b25969bc"
+            "sha256": "d57017be152e4ff84135b3fad0fd35ef173539b6923cef5075a5a33dc87b3f67"
         }
     ],
     "flags": [
         20,
         20
     ],
-    "hash": "f4cb74a5bd1c2ed421f28b8298489544e61045a66f7652e7340ba935520e7d8b",
+    "hash": "32e861832052083b3a3cf691cebb1672ffea1f0e2c3dd48320b2bf72eabad139",
     "top_component": {
         "name": "fir1_6",
         "ports_flat": [
@@ -69,7 +69,7 @@
             {
                 "direction": "in",
                 "is_clock": false,
-                "name": "eta",
+                "name": "c$arg",
                 "type_name": "signed [7:0]",
                 "width": 8
             },

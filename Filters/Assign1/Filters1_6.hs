@@ -23,18 +23,13 @@ hs :: Vec 6 (Signed 8)
 hs = (3:>5:>7:>11:>13:>17:>Nil)
 
 fir1_6 :: HiddenClockResetEnable dom => Signal dom (Signed 8) -> Signal dom (Signed 8)
-fir1_6 input = out
+fir1_6 = mealy step (repeat 0)
   where
-    reg1 = register 0 input
-    reg2 = register 0 reg1
-    reg3 = register 0 reg2
-    reg4 = register 0 reg3
-    reg5 = register 0 reg4
-    reg6 = register 0 reg5
-    
-    delayedVec = bundle (reg6 :> reg5 :> reg4 :> reg3 :> reg2 :> reg1 :> Nil)
-    
-    out = fmap (fold (+) . zipWith (*) hs) delayedVec
+    step :: Vec 6 (Signed 8) -> Signed 8 -> (Vec 6 (Signed 8), Signed 8)
+    step state input = (newState, output)
+      where
+        newState = input :> init state
+        output = fold (+) (zipWith (*) hs newState)
 
 -----------------------------------------------------------
 -- topEntity's

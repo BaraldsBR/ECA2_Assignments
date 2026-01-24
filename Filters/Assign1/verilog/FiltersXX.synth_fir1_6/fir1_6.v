@@ -7,80 +7,40 @@ module fir1_6
     ( // Inputs
       input wire  xs // clock
     , input wire  rst // reset
-    , input wire signed [7:0] eta
+    , input wire signed [7:0] c$arg
 
       // Outputs
     , output wire signed [7:0] o
     );
-  // Filters1_6.hs:16:1-86
-  reg signed [7:0] reg1 = 8'sd0;
-  // Filters1_6.hs:16:1-86
-  reg signed [7:0] reg2 = 8'sd0;
-  // Filters1_6.hs:16:1-86
-  reg signed [7:0] reg3 = 8'sd0;
-  // Filters1_6.hs:16:1-86
-  reg signed [7:0] reg4 = 8'sd0;
-  // Filters1_6.hs:16:1-86
-  reg signed [7:0] reg5 = 8'sd0;
-  // Filters1_6.hs:16:1-86
-  wire [47:0] x;
-  wire [47:0] c$app_arg;
-  // Filters1_6.hs:16:1-86
-  reg signed [7:0] c$x_app_arg = 8'sd0;
+  // Filters1_6.hs:25:1-86
+  wire [47:0] c$ds_app_arg;
+  // Filters1_6.hs:25:1-86
+  reg [47:0] state = {8'sd0,   8'sd0,   8'sd0,   8'sd0,   8'sd0,   8'sd0};
+  // Filters1_6.hs:25:1-86
+  wire [47:0] newState1;
+  // Filters1_6.hs:25:1-86
+  wire [39:0] newState;
   wire [47:0] c$vec1;
 
-  // register begin
-  always @(posedge xs or  posedge  rst) begin : reg1_register
-    if ( rst) begin
-      reg1 <= 8'sd0;
-    end else begin
-      reg1 <= eta;
-    end
-  end
-  // register end
+  assign c$vec1 = {8'sd3,   8'sd5,   8'sd7,
+                   8'sd11,   8'sd13,   8'sd17};
 
-  // register begin
-  always @(posedge xs or  posedge  rst) begin : reg2_register
-    if ( rst) begin
-      reg2 <= 8'sd0;
-    end else begin
-      reg2 <= reg1;
-    end
-  end
-  // register end
+  // zipWith start
+  genvar i;
+  generate
+  for (i = 0; i < 6; i = i + 1) begin : zipWith
+    wire signed [7:0] zipWith_in1;
+    assign zipWith_in1 = c$vec1[i*8+:8];
+    wire signed [7:0] zipWith_in2;
+    assign zipWith_in2 = newState1[i*8+:8];
+    wire signed [7:0] c$n;
+    assign c$n = zipWith_in1 * zipWith_in2;
 
-  // register begin
-  always @(posedge xs or  posedge  rst) begin : reg3_register
-    if ( rst) begin
-      reg3 <= 8'sd0;
-    end else begin
-      reg3 <= reg2;
-    end
-  end
-  // register end
 
-  // register begin
-  always @(posedge xs or  posedge  rst) begin : reg4_register
-    if ( rst) begin
-      reg4 <= 8'sd0;
-    end else begin
-      reg4 <= reg3;
-    end
+    assign c$ds_app_arg[i*8+:8] = c$n;
   end
-  // register end
-
-  // register begin
-  always @(posedge xs or  posedge  rst) begin : reg5_register
-    if ( rst) begin
-      reg5 <= 8'sd0;
-    end else begin
-      reg5 <= reg4;
-    end
-  end
-  // register end
-
-  assign x = {c$x_app_arg,   reg5,   reg4,
-              reg3,   reg2,   reg1};
+  endgenerate
+  // zipWith end
 
   wire [47:0] vec;
   wire signed [7:0] acc_3_0;
@@ -96,7 +56,7 @@ module fir1_6
   wire signed [7:0] acc_1_2;
   assign o = acc_3_0;
 
-  assign vec = c$app_arg;
+  assign vec = c$ds_app_arg;
 
   assign acc_1 = $signed(vec[47:40]);
 
@@ -132,35 +92,19 @@ module fir1_6
 
 
 
-  assign c$vec1 = {8'sd3,   8'sd5,   8'sd7,
-                   8'sd11,   8'sd13,   8'sd17};
-
-  // zipWith start
-  genvar i;
-  generate
-  for (i = 0; i < 6; i = i + 1) begin : zipWith
-    wire signed [7:0] zipWith_in1;
-    assign zipWith_in1 = c$vec1[i*8+:8];
-    wire signed [7:0] zipWith_in2;
-    assign zipWith_in2 = x[i*8+:8];
-    wire signed [7:0] c$n;
-    assign c$n = zipWith_in1 * zipWith_in2;
-
-
-    assign c$app_arg[i*8+:8] = c$n;
-  end
-  endgenerate
-  // zipWith end
-
   // register begin
-  always @(posedge xs or  posedge  rst) begin : c$x_app_arg_register
+  always @(posedge xs or  posedge  rst) begin : state_register
     if ( rst) begin
-      c$x_app_arg <= 8'sd0;
+      state <= {8'sd0,   8'sd0,   8'sd0,   8'sd0,   8'sd0,   8'sd0};
     end else begin
-      c$x_app_arg <= reg5;
+      state <= newState1;
     end
   end
   // register end
+
+  assign newState1 = {c$arg,   newState};
+
+  assign newState = state[48-1 : 8];
 
 
 endmodule
