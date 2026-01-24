@@ -1,0 +1,86 @@
+{
+    "components": [
+        "fir1_100"
+    ],
+    "dependencies": {
+        "transitive": []
+    },
+    "domains": {
+        "IntelSystem": {
+            "active_edge": "Rising",
+            "init_behavior": "Defined",
+            "period": 10000,
+            "reset_kind": "Asynchronous",
+            "reset_polarity": "ActiveHigh"
+        },
+        "System": {
+            "active_edge": "Rising",
+            "init_behavior": "Defined",
+            "period": 10000,
+            "reset_kind": "Asynchronous",
+            "reset_polarity": "ActiveHigh"
+        },
+        "XilinxSystem": {
+            "active_edge": "Rising",
+            "init_behavior": "Defined",
+            "period": 10000,
+            "reset_kind": "Synchronous",
+            "reset_polarity": "ActiveHigh"
+        }
+    },
+    "files": [
+        {
+            "name": "fir1_100_shim.cpp",
+            "sha256": "b4a0dd0367211c5acd12068240f77bf66cb1c367fc1341ca8eb2ad4b7c35fb4a"
+        },
+        {
+            "name": "fir1_100.sdc",
+            "sha256": "ddcf6403a741ee794dc6a98d6c0fc4c2d0f8a917ae0c1e5e0e495d53b3236c82"
+        },
+        {
+            "name": "fir1_100.v",
+            "sha256": "97731b435fc9c5097bac959e5e98ffa7274230c78f4da42be147735766611c3c"
+        }
+    ],
+    "flags": [
+        20,
+        20
+    ],
+    "hash": "ebdf1a2680a3aa8e1bbc77a168a38542efb916406a4fc0505b74c9f40ed648bf",
+    "top_component": {
+        "name": "fir1_100",
+        "ports_flat": [
+            {
+                "direction": "in",
+                "domain": "System",
+                "is_clock": true,
+                "name": "xs",
+                "type_name": "",
+                "width": 1
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "is_clock": false,
+                "name": "rst",
+                "type_name": "",
+                "width": 1
+            },
+            {
+                "direction": "in",
+                "is_clock": false,
+                "name": "c$arg",
+                "type_name": "signed [17:0]",
+                "width": 18
+            },
+            {
+                "direction": "out",
+                "is_clock": false,
+                "name": "o",
+                "type_name": "signed [17:0]",
+                "width": 18
+            }
+        ]
+    },
+    "version": "unstable"
+}
