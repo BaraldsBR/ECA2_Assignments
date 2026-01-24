@@ -50,7 +50,6 @@ simMfir3_6 inputList = simulateN @System 20 mfir3_6 inputList
 simulate20 :: [Signed 8]
 simulate20 = simMfir3_6 [1..20]
 
-
 -- Assignment 5
 {-# ANN synth_mfir3_6
   (Synthesize
