@@ -20,7 +20,7 @@
 15 points
 - [x] Exercise 1 (1 point)
 - [x] Exercise 2 (0.5 point)
-- [ ] Exercise 3 (1.5 points)
+- [x] Exercise 3 (1.5 points)
 - [ ] Exercise 4 (0.5 point)
 - [ ] Exercise 5 (2 points)
 - [ ] Exercise 6 (0.5 point)
