@@ -19,7 +19,7 @@
 ### Deadline: 2026/01/25
 15 points
 - [x] Exercise 1 (1 point)
-- [ ] Exercise 2 (0.5 point)
+- [x] Exercise 2 (0.5 point)
 - [ ] Exercise 3 (1.5 points)
 - [ ] Exercise 4 (0.5 point)
 - [ ] Exercise 5 (2 points)
