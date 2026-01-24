@@ -12,8 +12,8 @@
 - [x] Exercise 6.1 (1 point)
 - [x] Exercise 6.2 (1 point)
 - [x] Exercise 7 (0.5 point)
-- [ ] Exercise 8.1 (1 point)
-- [ ] Exercise 8.2 (1 point)
+- [X] Exercise 8.1 (1 point)
+- [X] Exercise 8.2 (1 point)
 
 ## Assignment 2: Filters
 ### Deadline: 2026/01/25
