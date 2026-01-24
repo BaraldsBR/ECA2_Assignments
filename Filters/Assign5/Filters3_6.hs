@@ -10,7 +10,8 @@ type Clk = Clock System
 type Rst = Reset System
 type Sig = Signal System
 
-hs = (3:>5:>7:>Nil) -- Symmetric filter since original could not have worked.
+hs :: Vec 6 (Signed 8)
+hs = (3:>5:>7:>11:>13:>17:>Nil)
 
 {-
   Given the original function
@@ -29,9 +30,9 @@ fir3 state = out
     sum_h1 = x1 + x4  
     sum_h2 = x2 + x3
     
-    prod_h0 = sum_h0 * (hs !! 0)
-    prod_h1 = sum_h1 * (hs !! 1)
-    prod_h2 = sum_h2 * (hs !! 2)
+    prod_h0 = (hs !! 0) * sum_h0
+    prod_h1 = (hs !! 1) * sum_h1
+    prod_h2 = (hs !! 2) * sum_h2
     
     out = prod_h0 + prod_h1 + prod_h2
 
