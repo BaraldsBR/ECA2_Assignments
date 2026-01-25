@@ -23,7 +23,7 @@ mfir2_6 = mealy step (repeat 0)
     step state input = (newState, output)
       where
         newState = input :> init state 
-        output = fir2 newState
+        output = fir2 state
 
 simMfir2_6 :: [Signed 8] -> [Signed 8]
 simMfir2_6 inputList = simulateN @System 20 mfir2_6 inputList

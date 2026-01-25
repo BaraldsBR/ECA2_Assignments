@@ -23,7 +23,7 @@
 - [x] Exercise 3 (1.5 points)
 - [x] Exercise 4 (0.5 point)
 - [x] Exercise 5 (2 points)
-- [ ] Exercise 6 (0.5 point)
+- [x] Exercise 6 (0.5 point)
 - [x] Exercise 7 (3 points)
 - [ ] Exercise 8 (3 points)
 - [ ] Exercise 9 (3 points)
