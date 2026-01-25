@@ -12,7 +12,7 @@ module mfir3t_6
       // Outputs
     , output wire signed [7:0] o
     );
-  // Filters3t_6.hs:26:1-88
+  // Filters3t_6.hs:28:1-88
   reg [47:0] c$ds_app_arg = {8'sd0,   8'sd0,   8'sd0,   8'sd0,   8'sd0,   8'sd0};
   // Filters3t_6.hs:17:1-7
   wire [23:0] prod;

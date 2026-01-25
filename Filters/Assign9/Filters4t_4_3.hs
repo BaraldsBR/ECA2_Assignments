@@ -16,9 +16,16 @@ baseAs = (0.9853304:>(-0.5929545):>0.1089457:>Nil)
 baseBs :: Vec 4 (SFixed 5 13)
 baseBs = (0.0623348:>0.1870044:>0.1870044:>0.0623348:>Nil)
 
-iir2 :: (Vec 3 (SFixed 5 13), Vec 4 (SFixed 5 13), Vec 3 (SFixed 5 13)) 
-    -> SFixed 5 13 
-    -> ((Vec 3 (SFixed 5 13), Vec 4 (SFixed 5 13), Vec 3 (SFixed 5 13)), SFixed 5 13)
+iir2 :: (
+        Vec 3 (SFixed 5 13),
+        Vec 4 (SFixed 5 13),
+        Vec 3 (SFixed 5 13)
+    )-> SFixed 5 13 
+    -> (
+        (Vec 3 (SFixed 5 13),
+        Vec 4 (SFixed 5 13),
+        Vec 3 (SFixed 5 13)
+    ), SFixed 5 13)
 iir2 (as, bs, regs) x = ((as, bs, newRegs), output) 
   where
     output = fold (+) bProds
@@ -30,7 +37,9 @@ iir2 (as, bs, regs) x = ((as, bs, newRegs), output)
 
     newRegs = (inputSum:>Nil) ++ (init regs)
 
-miir2 :: HiddenClockResetEnable dom => Signal dom (SFixed 5 13) -> Signal dom (SFixed 5 13)
+miir2 :: HiddenClockResetEnable dom
+  => Signal dom (SFixed 5 13)
+  -> Signal dom (SFixed 5 13)
 miir2 = mealy iir2 (baseAs, baseBs, repeat 0)
 
 simMiir2 :: [SFixed 5 13]
