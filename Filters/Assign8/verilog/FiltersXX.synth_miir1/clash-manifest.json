@@ -1,0 +1,86 @@
+{
+    "components": [
+        "miir1"
+    ],
+    "dependencies": {
+        "transitive": []
+    },
+    "domains": {
+        "IntelSystem": {
+            "active_edge": "Rising",
+            "init_behavior": "Defined",
+            "period": 10000,
+            "reset_kind": "Asynchronous",
+            "reset_polarity": "ActiveHigh"
+        },
+        "System": {
+            "active_edge": "Rising",
+            "init_behavior": "Defined",
+            "period": 10000,
+            "reset_kind": "Asynchronous",
+            "reset_polarity": "ActiveHigh"
+        },
+        "XilinxSystem": {
+            "active_edge": "Rising",
+            "init_behavior": "Defined",
+            "period": 10000,
+            "reset_kind": "Synchronous",
+            "reset_polarity": "ActiveHigh"
+        }
+    },
+    "files": [
+        {
+            "name": "miir1_shim.cpp",
+            "sha256": "2d2f418a29d70bc9990ab1799dd81a7792ccc29699dbf38efa9889d192a9df0a"
+        },
+        {
+            "name": "miir1.sdc",
+            "sha256": "13d4c1aafcc09a84d81d3b60d513cb901384a10e27e5a5a16572a600f15895f3"
+        },
+        {
+            "name": "miir1.v",
+            "sha256": "f5a1f35a2c5e5865ffe66c374de9451f44bda30e5eb649e97ab14a18afb234eb"
+        }
+    ],
+    "flags": [
+        20,
+        20
+    ],
+    "hash": "8afc5daffc97d61e948e8287dd0df1a44a330699edf190c1a4f58c6431d99435",
+    "top_component": {
+        "name": "miir1",
+        "ports_flat": [
+            {
+                "direction": "in",
+                "domain": "System",
+                "is_clock": true,
+                "name": "clk",
+                "type_name": "",
+                "width": 1
+            },
+            {
+                "direction": "in",
+                "domain": "System",
+                "is_clock": false,
+                "name": "rst",
+                "type_name": "",
+                "width": 1
+            },
+            {
+                "direction": "in",
+                "is_clock": false,
+                "name": "x",
+                "type_name": "signed [17:0]",
+                "width": 18
+            },
+            {
+                "direction": "out",
+                "is_clock": false,
+                "name": "o",
+                "type_name": "signed [17:0]",
+                "width": 18
+            }
+        ]
+    },
+    "version": "unstable"
+}
