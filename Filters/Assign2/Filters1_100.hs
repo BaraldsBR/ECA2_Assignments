@@ -10,14 +10,11 @@ type Clk = Clock System
 type Rst = Reset System
 type Sig = Signal System
 
-fir1_100 :: HiddenClockResetEnable dom => Signal dom (SFixed 5 13) -> Signal dom (SFixed 5 13)
-fir1_100 = mealy step (repeat 0)
+fir1_100 :: HiddenClockResetEnable dom => Signal dom (Vec 100 (SFixed 5 13)) -> Signal dom (SFixed 5 13)
+fir1_100 input = output
   where
-    step :: Vec 100 (SFixed 5 13) -> SFixed 5 13 -> (Vec 100 (SFixed 5 13), SFixed 5 13)
-    step state input = (newState, output)
-      where
-        newState = input :> init state
-        output = fold (+) (zipWith (*) filterCoef newState)
+    state = register filterCoef (pure filterCoef)
+    output = fold (+) <$> (zipWith (*) <$> input <*> state)
 
 -----------------------------------------------------------
 -- topEntity's
