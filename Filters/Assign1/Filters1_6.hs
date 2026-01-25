@@ -22,14 +22,11 @@ type Sig = Signal System
 hs :: Vec 6 (Signed 8)
 hs = (3:>5:>7:>11:>13:>17:>Nil)
 
-fir1_6 :: HiddenClockResetEnable dom => Signal dom (Signed 8) -> Signal dom (Signed 8)
-fir1_6 = mealy step (repeat 0)
+fir1_6 :: HiddenClockResetEnable dom => Signal dom (Vec 6 (Signed 8)) -> Signal dom (Signed 8)
+fir1_6 input = output
   where
-    step :: Vec 6 (Signed 8) -> Signed 8 -> (Vec 6 (Signed 8), Signed 8)
-    step state input = (newState, output)
-      where
-        newState = input :> init state
-        output = fold (+) (zipWith (*) hs newState)
+    state = register hs (pure hs)
+    output = fold (+) <$> (zipWith (*) <$> input <*> state)
 
 -----------------------------------------------------------
 -- topEntity's
@@ -40,5 +37,5 @@ fir1_6 = mealy step (repeat 0)
     , t_inputs = [PortName "xs"]
     , t_output = PortName "o"
     }) #-}
-synth_fir1_6 :: Clk -> Rst -> Sig (Signed 8) -> Sig (Signed 8)
+synth_fir1_6 :: Clk -> Rst -> Sig (Vec 6 (Signed 8)) -> Sig (Signed 8)
 synth_fir1_6 clk rst = withClockResetEnable clk rst enableGen fir1_6
