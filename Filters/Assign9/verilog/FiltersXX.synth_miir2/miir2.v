@@ -12,25 +12,25 @@ module miir2
       // Outputs
     , output wire signed [17:0] o
     );
-  // Filters4t_4_3.hs:33:1-91
+  // Filters4t_4_3.hs:(40,1)-(42,29)
   reg [179:0] c$ds_app_arg = {{18'sd8071,   -18'sd4857,   18'sd892},   {18'sd510,   18'sd1531,   18'sd1531,
                                            18'sd510},   {18'sd0,   18'sd0,
                                                          18'sd0}};
   wire [71:0] c$app_arg;
-  // Filters4t_4_3.hs:22:1-4
+  // Filters4t_4_3.hs:29:1-4
   wire [71:0] bs;
   wire signed [17:0] result;
   wire signed [17:0] c$case_alt;
   wire [17:0] \r' ;
   wire [18:0] \c$r'_app_arg ;
   wire signed [18:0] r;
-  // Filters4t_4_3.hs:22:1-4
+  // Filters4t_4_3.hs:29:1-4
   wire signed [17:0] c$inputSum_app_arg;
-  // Filters4t_4_3.hs:22:1-4
+  // Filters4t_4_3.hs:29:1-4
   wire [53:0] c$inputSum_app_arg_0;
-  // Filters4t_4_3.hs:22:1-4
+  // Filters4t_4_3.hs:29:1-4
   wire [53:0] regs;
-  // Filters4t_4_3.hs:22:1-4
+  // Filters4t_4_3.hs:29:1-4
   wire [53:0] as;
   wire [71:0] c$vec2;
   wire [17:0] c$bv_10;

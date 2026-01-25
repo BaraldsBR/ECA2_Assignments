@@ -21,7 +21,9 @@ fir3t_6 state x = (newState, output)
     prod :: Vec 3 (Signed 8)
     prod = zipWith (*) (take d3 hs) (repeat x)
 
-    newState = (zipWith (+) (tail state) (take d5 (prod ++ (reverse prod)))) ++ ((head prod):> Nil)
+    newState = (zipWith 
+             (+) (tail state) (take d5 (prod ++ (reverse prod)))) 
+             ++ ((head prod):> Nil)
 
 mfir3t_6 :: HiddenClockResetEnable dom => Signal dom (Signed 8) -> Signal dom (Signed 8)
 mfir3t_6 = mealy fir3t_6 (repeat 0)
