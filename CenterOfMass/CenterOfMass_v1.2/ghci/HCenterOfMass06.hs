@@ -53,3 +53,25 @@ imageWithCom color image = modifiedImage where
 -- Assignment 3 Center of mass of parts of the image, with and without borders
 -----------------------------------------------------------------------------------------
 
+comParts :: [[Pixel]] -> [[Pixel]]
+comParts image = unblocks2D (length image) modifiedBlocks where
+    isZeroes :: [[Pixel]] -> Bool
+    isZeroes block = block == (take 8 $ repeat $ take 8 $ repeat 0)
+
+    blocks = blocks2D 8 image
+    modifiedBlocks = map alterBlock blocks where
+        alterBlock block = if (isZeroes block)
+            then changePixelInImage block 3 3 2
+            else imageWithCom 2 block
+            
+comPartsWB :: [[Pixel]] -> [[Pixel]]
+comPartsWB image = unblocks2D (div ((length image) * 5) 4) modifiedBlocksWB where
+    isZeroes :: [[Pixel]] -> Bool
+    isZeroes block = block == (take 8 $ repeat $ take 8 $ repeat 0)
+
+    blocks = blocks2D 8 image
+    modifiedBlocks = map alterBlock blocks where
+        alterBlock block = if (isZeroes block)
+            then changePixelInImage block 3 3 2
+            else imageWithCom 2 block
+    modifiedBlocksWB = addBorders 2 modifiedBlocks
