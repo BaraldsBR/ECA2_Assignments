@@ -22,12 +22,81 @@ import qualified Data.List as L
 -- Assignment 4, Changing a pixel in a picture
 -----------------------------------------------------------------------------------------
 
-changePixelInImage = undefined
+changePixelInImage :: (Enum a, KnownNat n, KnownNat m)
+  => Vec n (Vec m Pixel)
+  -> a 
+  -> a
+  -> Pixel
+  -> Vec n (Vec m Pixel)
+changePixelInImage image y x p = replace y (replace x p (image !! y)) image
+
+thresholdIm :: (KnownNat n, KnownNat m)
+  => Integer
+  -> Vec n (Vec m Pixel)
+  -> Vec n (Vec m Pixel)
+thresholdIm t grayscaleImage = bwImage where
+  applyThreshold :: Pixel -> Pixel
+  applyThreshold p = if (fromIntegral p) < t then 0 else 1
+  bwImage = map (map applyThreshold) grayscaleImage
+
+comRows :: (KnownNat n, KnownNat m)
+  => Vec n (Vec m Pixel)
+  -> Int
+comRows image = rowIndex where
+  rowIndex = div totalProductSum totalSum
+  
+  rowSums = map sumFromInt image where sumFromInt a = sum (map fromIntegral a)
+  totalSum = sum rowSums
+
+  productRowSums = zipWith (*) rowSums (iterateI (+1) 0)
+  totalProductSum = sum productRowSums
+
+com :: (KnownNat n, KnownNat m)
+  => Vec n (Vec m Pixel) -> (Int, Int)
+com image = (rowIndex, colIndex) where
+  rowIndex = comRows image
+  colIndex = comRows $ transpose image
+
+imageWithCom :: (KnownNat n, KnownNat m)
+  => Pixel
+  -> Vec n (Vec m Pixel)
+  -> Vec n (Vec m Pixel)
+imageWithCom color image = modifiedImage where
+  (rowIndex, colIndex) = com image
+  modifiedImage = changePixelInImage image rowIndex colIndex color
 
 -----------------------------------------------------------------------------------------
 -- Assignment 5, Center of mass of parts of the image, with and without borders
 -----------------------------------------------------------------------------------------
 
+comParts :: (KnownNat n, KnownNat m)
+  => Vec (n * 8) (Vec (m * 8) Pixel)
+  -> Vec (n * 8) (Vec (m * 8) Pixel)
+comParts image = withSNat (unblocks2D) modifiedBlocks where
+  
+  isZeroes :: Vec 8 (Vec 8 Pixel) -> Bool
+  isZeroes block = block == (repeat $ repeat (0 :: Pixel))
+
+  blocks = blocks2D d8 image
+  modifiedBlocks = map alterBlock blocks where
+    alterBlock block = if (isZeroes block)
+      then changePixelInImage block 3 3 2
+      else imageWithCom 2 block
+            
+comPartsWB :: (KnownNat n, KnownNat m)
+  => Vec (n * 8) (Vec (m * 8) Pixel)
+  -> Vec (n * 10) (Vec (m * 10) Pixel)
+comPartsWB image = withSNat (unblocks2D) modifiedBlocksWB where
+
+  isZeroes :: Vec 8 (Vec 8 Pixel) -> Bool
+  isZeroes block = block == (repeat $ repeat (0 :: Pixel))
+
+  blocks = blocks2D d8 image
+  modifiedBlocks = map alterBlock blocks where
+    alterBlock block = if (isZeroes block)
+      then changePixelInImage block 3 3 2
+      else imageWithCom 2 block
+  modifiedBlocksWB = addBorders 2 modifiedBlocks
 
 -----------------------------------------------------------------------------------------
 -- Assignment 6, Axi streaming serial
