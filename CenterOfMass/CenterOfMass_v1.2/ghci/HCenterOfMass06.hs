@@ -15,10 +15,8 @@ import Data.List
 -- Assignment 1, From grayscale to black and white
 -----------------------------------------------------------------------------------------
 
-threshold = 128 -- not sure if we should import this from Common.hs, since that depends focuses on hardware and this is purely functional
-
-thresholdIm :: [[Pixel]] -> [[Pixel]]
-thresholdIm grayscaleImage = bwImage where
+thresholdIm :: Int -> [[Pixel]] -> [[Pixel]]
+thresholdIm threshold grayscaleImage = bwImage where
     applyThreshold p = if p < threshold then 0 else 1
     bwImage = map (map applyThreshold) grayscaleImage
 
